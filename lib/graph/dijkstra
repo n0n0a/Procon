@@ -1,0 +1,90 @@
+ll N, M;
+struct edge {
+    ll to, cost;
+    bool operator<(const edge &another) const { return cost < another.cost; };
+    bool operator>(const edge &another) const { return cost > another.cost; };
+};
+vector<vector<edge>> G;
+VL d;
+
+void dijkstra(ll s) {
+    priority_queue<edge, vector<edge>, greater<edge>> pq;
+    d.assign(N, LINF);
+    d[s] = 0;
+    pq.push({s, 0});
+
+    while(!pq.empty()) {
+        edge now = pq.top();
+        pq.pop();
+        ll v = now.to;
+        if(d[v] < now.cost) continue;
+
+        REP(i, G[v].size()) {
+            edge e = G[v][i];
+            if(d[e.to] > d[v] + e.cost) {
+                d[e.to] = d[v] + e.cost;
+                pq.push({e.to, d[e.to]});
+            }
+        }
+    }
+}
+
+ll H, W;
+VVL A;
+VVL d;
+
+
+//ver grid
+void dijkstra(ll sh, ll sw) {
+    using tp = tuple<ll, ll, ll>;
+    PQG<tp> pq;
+    d.assign(H, VL(W, LINF));
+    d[sh][sw] = 0;
+    pq.emplace(0LL, sh, sw);
+    ll h, w, cost;
+    while(!pq.empty()) {
+        tie(cost, h, w) = pq.top();
+        pq.pop();
+        if(d[h][w] < cost) continue;
+        REP(i, 4) {
+            ll nh = h + dh[2 * i], nw = w + dw[2 * i];
+            if(nh < 0 || nh > H - 1 || nw < 0 || nw > W - 1) continue;
+            if(chmin(d[nh][nw], cost + A[nh][nw])) {
+                pq.emplace(d[nh][nw], nh, nw);
+            }
+        }
+    }
+}
+
+ll N, M;
+struct edge {
+    ll to, cost;
+    bool operator<(const edge &another) const { return cost < another.cost; };
+    bool operator>(const edge &another) const { return cost > another.cost; };
+};
+vector<vector<edge>> G;
+VL d,pre;
+
+//復元
+void dijkstra(ll s) {
+    priority_queue<edge, vector<edge>, greater<edge>> pq;
+    d.assign(N, LINF);
+    pre.assign(N, -1);
+    pq.push({s, 0});
+
+    while(!pq.empty()) {
+        edge now = pq.top();
+        pq.pop();
+        ll v = now.to;
+        if(d[v] < now.cost) continue;
+
+        REP(i, G[v].size()) {
+            edge e = G[v][i];
+            if(d[e.to] > d[v] + e.cost) {
+                d[e.to] = d[v] + e.cost;
+                pre[e.to] = v;
+                pq.push({e.to, d[e.to]});
+            }
+        }
+    }
+}

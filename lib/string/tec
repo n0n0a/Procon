@@ -1,0 +1,171 @@
+string func(int num) {
+    string str = "";
+    while(num >= 0) {
+        int mod = num % 26;
+        str += char(mod + 'a');
+        num -= mod;
+        num = num / 26 - 1;
+    }
+    reverse(str.begin(), str.end());
+    return str;
+}
+
+// find program
+vector<string> split(string str, char del) {
+    ll first = 0;
+    ll last = str.find_first_of(del);
+
+    vector<string> result;
+
+    while(first < str.size()) {
+        string subStr(str, first, last - first);
+
+        result.push_back(subStr);
+
+        first = last + 1;
+        last = str.find_first_of(del, first);
+
+        if(last == string::npos) {
+            last = str.size();
+        }
+    }
+
+    return result;
+}
+
+// for program
+vector<string> split(string str, char del) {
+    vector<string> result;
+    string subStr;
+
+    for(const char c : str) {
+        if(c == del) {
+            result.push_back(subStr);
+            subStr.clear();
+        } else {
+            subStr += c;
+        }
+    }
+
+    result.push_back(subStr);
+    return result;
+}
+
+vector<ll> find_all(const std::string str, const std::string subStr) {
+    vector<ll> result;
+
+    ll subStrSize = subStr.size();
+    ll pos = str.find(subStr);
+
+    while(pos != std::string::npos) {
+        result.push_back(pos);
+        pos = str.find(subStr, pos + subStrSize);
+    }
+
+    return result;
+}
+
+template <class T>
+std::vector<std::string> split(const std::string &s, const T &separator, bool ignore_empty = 0, bool split_empty = 0) {
+    struct {
+        auto len(const std::string &s) { return s.length(); }
+        auto len(const std::string::value_type *p) {
+            return p ? std::char_traits<std::string::value_type>::length(p) : 0;
+        }
+        auto len(const std::string::value_type c) {
+            return c == std::string::value_type() ? 0 : 1; /*return 1;*/
+        }
+    } util;
+
+    if(s.empty()) { /// empty string ///
+        if(!split_empty || util.len(separator)) return {""};
+        return {};
+    }
+
+    auto v = std::vector<std::string>();
+    auto n = static_cast<std::string::size_type>(util.len(separator));
+    if(n == 0) { /// empty separator ///
+        if(!split_empty) return {s};
+        for(auto &&c : s) v.emplace_back(1, c);
+        return v;
+    }
+
+    auto p = std::string::size_type(0);
+    while(1) { /// split with separator ///
+        auto pos = s.find(separator, p);
+        if(pos == std::string::npos) {
+            if(ignore_empty && p - n + 1 == s.size()) break;
+            v.emplace_back(s.begin() + p, s.end());
+            break;
+        }
+        if(!ignore_empty || p != pos)
+            v.emplace_back(s.begin() + p, s.begin() + pos);
+        p = pos + n;
+    }
+    return v;
+}
+
+// sign
+ll sign(ll A) { return (A > 0) - (A < 0); }
+
+// Replace
+string ReplaceString(std::string String1, std::string String2, std::string String3) {
+    std::string::size_type Pos(String1.find(String2));
+
+    while(Pos != std::string::npos) {
+        String1.replace(Pos, String2.length(), String3);
+        Pos = String1.find(String2, Pos + String3.length());
+    }
+
+    return String1;
+}
+
+string ReplaceString(string String1 //
+                     ,
+                     string String2 //
+                     ,
+                     string String3 //
+) {
+    string::size_type Pos(String1.find(String2));
+
+    while(Pos != string::npos) {
+        String1.replace(Pos, String2.length(), String3);
+        Pos = String1.find(String2, Pos + String3.length());
+    }
+
+    return String1;
+}
+
+//空白も含めて読み込みたい場合getlineを使おう
+cin.ignore();
+REP(i, L + 1) {
+    getline(cin, amida[i]);
+    cout << amida[i] << "\n";
+}
+
+//桁数計算(OlogN)
+int GetLen(int x) {
+    int len = 0;
+    while(x != 0) {
+        x /= 10;
+        len++;
+    }
+    return len;
+}
+
+// O(1)
+std::vector<int> len(N + 1);
+for (int i = 1; i <= N; i++) {
+    len[i] = len[i / 10] + 1;
+}
+
+//next c idx
+vector<vector<int> > calcNext(const string &S) {
+    int n = (int)S.size();
+    vector<vector<int> > res(n+1, vector<int>(26, n));
+    for (int i = n-1; i >= 0; --i) {
+        for (int j = 0; j < 26; ++j) res[i][j] = res[i+1][j];
+        res[i][S[i]-'a'] = i;
+    }
+    return res;
+}

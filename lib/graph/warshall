@@ -1,0 +1,11 @@
+
+ll N;
+ll dist[300][300];
+Fill(dist, LINF);
+
+void warshall_floyd() {
+    REP(i, N) dist[i][i] = 0;
+    REP(k, N) REP(i, N) REP(j, N) {
+        dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]);
+    }
+}

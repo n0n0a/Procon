@@ -1,0 +1,135 @@
+map<ll,ll> primefact(ll n){
+    map<ll,ll> res;
+    for(ll i=2; i*i<=n; i++){
+        while(n%i==0){
+            res[i]++;
+            n/=i;
+        }
+    }
+    if(n!=1) res[n]=1;
+    return res;
+}
+
+
+VL primefact(ll n) {
+    VL res;
+    for(ll i = 2; i * i <= n; i++) {
+        while(n % i == 0) {
+            res.emplace_back(i);
+            n /= i;
+        }
+    }
+    if(n != 1) res.emplace_back(n);
+    return res;
+}
+
+//prime judge
+bool IsPrime(int num)
+{
+    if (num < 2) return false;
+    else if (num == 2) return true;
+    else if (num % 2 == 0) return false; // 偶数はあらかじめ除く
+
+    double sqrtNum = sqrt(num);
+    for (int i = 3; i <= sqrtNum; i += 2)
+    {
+        if (num % i == 0)
+        {
+            // 素数ではない
+            return false;
+        }
+    }
+
+    // 素数である
+    return true;
+}
+
+bool is_prime[(ll)1e6];
+bool is_prime_small[(ll)1e6];
+
+VL seg_sieve(ll a, ll b) {
+    VL res;
+    for(ll i = 2; i * i < b; i++) is_prime_small[i] = true;
+    REP(i, b - a) is_prime[i] = true;
+    for(ll i = 2; i * i < b; i++) {
+        if(is_prime_small[i]) {
+            for(ll j = 2 * i; j * j < b; j += i) is_prime_small[j] = false;
+            for(ll j = max(2LL, (a + i - 1) / i) * i; j < b; j += i)
+                is_prime[j - a] = false;
+        }
+    }
+    is_prime[0] = false, is_prime[1] = false;
+    REP(i, b - a) if(is_prime[i]) res.emplace_back(i + a);
+    return res;
+}
+
+VL seg_sieve(ll a, ll b) {
+    VL res,is_prime(1e6 + 1), is_prime_small(1e6 + 1);
+    for(ll i = 2; i * i < b; i++) is_prime_small[i] = true;
+    REP(i, b - a) is_prime[i] = true;
+    for(ll i = 2; i * i < b; i++) {
+        if(is_prime_small[i]) {
+            for(ll j = 2 * i; j * j < b; j += i) is_prime_small[j] = false;
+            for(ll j = max(2LL, (a + i - 1) / i) * i; j < b; j += i)
+                is_prime[j - a] = false;
+        }
+    }
+    is_prime[0] = false, is_prime[1] = false;
+    REP(i, b - a) if(is_prime[i]) res.emplace_back(i + a);
+    return res;
+}
+
+//EulerPhi
+ll euler_phi(ll n) {
+    ll ret = n;
+    for(ll i = 2; i * i <= n; i++) {
+        if(n % i == 0) {
+            ret -= ret / i;
+            while(n % i == 0) n /= i;
+        }
+    }
+    if(n > 1) ret -= ret / n;
+    return ret;
+}
+
+ll gcd(ll a, ll b) {
+    if(b == 0) return a;
+    return gcd(b, a % b);
+}
+
+ll lcm(ll a, ll b) {
+  return a * b / gcd(a, b);
+}
+
+ll extgcd(ll a, ll b, ll &x, ll&y){
+    ll d=a;
+    if(b!=0){
+        d = extgcd(b, a%b, y, x);
+        y -= (a/b)*x;
+    }else{
+        x=1; y=0;
+    }
+    return d;
+}
+
+VL divisor(ll n) {
+    VL res;
+    for(ll i = 1; i * i <= n; i++) {
+        if(n % i == 0) {
+            res.push_back(i);
+            if(i != n / i) res.push_back(n / i);
+        }
+    }
+    return res;
+}
+
+//レイヤーの数え上げ
+ll num[1001000];
+int iter = 0;
+for(int i = 1; i <= N;) {
+    int j = N / i;
+    if(i <= j)
+        num[iter++] = 1, ++i; // 前半
+    else
+        num[iter++] = N / j - i + 1, i = N / j + 1; // 後半
+}

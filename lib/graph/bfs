@@ -1,0 +1,153 @@
+ll dw[4] = {1, -1, 0, 0};
+ll dh[4] = {0, 0, 1, -1};
+ll H, W, sw, sh, gw, gh;
+vector<string> G;
+vector<VL> d;
+
+//0-1bfs
+void bfs01(){
+    deque<PL> dq;
+    dq.emplace_back(sh, sw);
+    d.assign(H,VL(W,LINF));
+    d[sh][sw] = 0;
+    while(!dq.empty()) {
+        PL now = dq.front();
+        dq.pop_front();
+        ll h = now.first;
+        ll w = now.second;
+        cout << h << " " << w << "\n";
+        REP(i, 4) {
+            ll nh = h + dh[i];
+            ll nw = w + dw[i];
+            if(0 <= nh && nh <= H - 1 && 0 <= nw && nw <= W - 1) {
+                if(G[nh][nw] == 'g') {
+                    cout << "YES"
+                            << "\n";
+                }
+                if(G[nh][nw] == '.' && d[h][w] < d[nh][nw]) {
+                    dq.emplace_front(nh, nw);
+                    d[nh][nw] = d[h][w];
+                } else if(G[nh][nw] == '#' && d[h][w] + 1 < d[nh][nw] && d[h][w] + 1 <= 2) {
+                    dq.emplace_back(nh, nw);
+                    d[nh][nw] = d[h][w] + 1;
+                }
+            }
+        }
+    }
+}
+
+
+ll dw[4] = {1, -1, 0, 0};
+ll dh[4] = {0, 0, 1, -1};
+ll H, W, T, sw, sh, gw, gh;
+struct edge {
+    ll h, w, cost;
+    bool operator<(const edge &another) const { return cost < another.cost; };
+    bool operator>(const edge &another) const { return cost > another.cost; };
+};
+vector<string> G;
+vector<VL> d;
+
+// 0-1bfs拡張
+void bfs01(ll x) {
+    priority_queue<edge, vector<edge>, greater<edge>> pq;
+    pq.push({sh, sw, 0});
+    d.assign(H, VL(W, LINF));
+    d[sh][sw] = 0;
+    while(!pq.empty()) {
+        edge now = pq.top();
+        pq.pop();
+        ll h = now.h;
+        ll w = now.w;
+        REP(i, 4) {
+            ll nh = h + dh[i];
+            ll nw = w + dw[i];
+            if(0 <= nh && nh <= H - 1 && 0 <= nw && nw <= W - 1) {
+                if((G[nh][nw] == '.' || G[nh][nw] == 'G') && d[h][w] + 1 < d[nh][nw]) {
+                    d[nh][nw] = d[h][w] + 1;
+                    pq.push({nh, nw, d[nh][nw]});
+                } else if(G[nh][nw] == '#' && d[h][w] + x < d[nh][nw]) {
+                    d[nh][nw] = d[h][w] + x;
+                    pq.push({nh, nw, d[nh][nw]});
+                }
+            }
+        }
+    }
+}
+
+
+
+
+ll N, M;
+vector<VL> G;
+VL d;
+
+void bfs(ll s) {
+    queue<ll> q;
+    q.emplace(s);
+    d.assign(N, LINF);
+    d[s] = 0;
+    while(!q.empty()) {
+        ll now = q.front();
+        q.pop();
+        REP(i, G[now].size()) {
+            ll to = G[now][i];
+            if(d[to] == LINF) {
+                d[to] = d[now] + 1;
+                q.emplace(to);
+            }
+        }
+    }
+}
+
+ll N, M;
+vector<VL> G;
+VL d;
+
+\\ver_経路カウント
+void bfs(ll s) {
+    queue<ll> q;
+    q.emplace(s);
+    d.assign(N, LINF);
+    d[s] = 0;
+    cnt[s] = 1;
+    while(!q.empty()) {
+        ll now = q.front();
+        q.pop();
+        REP(i, G[now].size()) {
+            ll to = G[now][i];
+            if(d[to] == LINF) {
+                d[to] = d[now] + 1;
+                (cnt[to] += cnt[now]) %= MOD;
+                q.emplace(to);
+            } else if(d[to] == d[now] + 1) {
+                (cnt[to] += cnt[now]) %= MOD;
+            }
+        }
+    }
+}
+
+//ver_grid
+ll H, W, sx, sy, gx, gy;
+vector<string> G;
+vector<VL> d;
+
+void bfs(PL s) {
+    queue<PL> q;
+    q.emplace(s);
+    d.assign(H, VL(W, -LINF));
+    d[s.fi][s.se] = 0;
+    while(!q.empty()) {
+        PL now = q.front();
+        q.pop();
+        ll y = now.fi, x = now.se;
+        if(y == gy && x == gx) break;
+        REP(i, 4) {
+            ll ny = y + dy[i], nx = x + dx[i];
+            if(G[ny][nx] == '.' && d[ny][nx] == -LINF) {
+                d[ny][nx] = d[y][x] + 1;
+                q.emplace(ny, nx);
+            }
+        }
+    }
+}
